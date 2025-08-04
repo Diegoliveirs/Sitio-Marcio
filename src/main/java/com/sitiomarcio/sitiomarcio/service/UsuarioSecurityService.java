@@ -23,7 +23,6 @@ public class UsuarioSecurityService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
 
-        System.out.println("Senha do usuário '" + username + "': " + usuario.getSenha());
 
         return new User(
                 usuario.getUsername(),
