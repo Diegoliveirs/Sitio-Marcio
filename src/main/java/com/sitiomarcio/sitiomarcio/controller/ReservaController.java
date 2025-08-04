@@ -33,7 +33,7 @@ public class ReservaController {
     }
 
     @DeleteMapping("deletar/{id}")
-    public void deletar (@PathVariable Long id, @RequestBody ReservaRequestDTO dto) {
+    public void deletar (@PathVariable Long id) {
         reservaService.deletarReserva(id);
     }
 }
