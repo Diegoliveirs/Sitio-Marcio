@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Service
 public class ReservaService {
@@ -22,16 +21,11 @@ public class ReservaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public ReservaResponseDTO cadastrarReserva(ReservaRequestDTO dto) {
-        if (dto.getCodusu() == null) {
+    public ReservaResponseDTO cadastrarReserva(ReservaRequestDTO dto, String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username).orElse(null);
+        if (usuario == null) {
             return null;
         }
-
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(dto.getCodusu());
-        if (usuarioOpt.isEmpty()) {
-            return null;
-        }
-        Usuario usuario = usuarioOpt.get();
 
         if (temConflito(dto.getDtEntrada(), dto.getDtSaida())) {
             throw new RuntimeException("Já existe uma reserva nesse período!");
@@ -76,9 +70,9 @@ public class ReservaService {
         }).collect(Collectors.toList());
     }
 
-    public ReservaResponseDTO atualizarReserva(Long id, ReservaRequestDTO dto) {
+    public ReservaResponseDTO atualizarReserva(Long id, ReservaRequestDTO dto, String username) {
         Reserva reserva = reservaRepository.findById(id).orElse(null);
-        Usuario usuario = usuarioRepository.findById(dto.getCodusu()).orElse(null);
+        Usuario usuario = usuarioRepository.findByUsername(username).orElse(null);
         if (reserva == null || usuario == null) {
             return null;
         }
