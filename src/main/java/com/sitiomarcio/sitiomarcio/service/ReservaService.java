@@ -2,17 +2,16 @@ package com.sitiomarcio.sitiomarcio.service;
 
 import com.sitiomarcio.sitiomarcio.dto.ReservaRequestDTO;
 import com.sitiomarcio.sitiomarcio.dto.ReservaResponseDTO;
-
 import com.sitiomarcio.sitiomarcio.model.Reserva;
 import com.sitiomarcio.sitiomarcio.model.Usuario;
 import com.sitiomarcio.sitiomarcio.repository.ReservaRepository;
 import com.sitiomarcio.sitiomarcio.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class ReservaService {
@@ -24,13 +23,18 @@ public class ReservaService {
     private UsuarioRepository usuarioRepository;
 
     public ReservaResponseDTO cadastrarReserva(ReservaRequestDTO dto) {
-        Usuario usuario = usuarioRepository.findById(dto.getCodusu()).orElse(null);
-        if (usuario == null) {
+        if (dto.getCodusu() == null) {
             return null;
         }
 
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(dto.getCodusu());
+        if (usuarioOpt.isEmpty()) {
+            return null;
+        }
+        Usuario usuario = usuarioOpt.get();
+
         if (temConflito(dto.getDtEntrada(), dto.getDtSaida())) {
-            throw new RuntimeException("Já existe uma reserva nesse periodo!");
+            throw new RuntimeException("Já existe uma reserva nesse período!");
         }
 
         Reserva reserva = new Reserva();
@@ -80,7 +84,7 @@ public class ReservaService {
         }
 
         if (temConflitoAoAtualizar(id, dto.getDtEntrada(), dto.getDtSaida())) {
-            throw  new RuntimeException("Conflito de data: já existe outra reserva nesse período.");
+            throw new RuntimeException("Conflito de data: já existe outra reserva nesse período.");
         }
 
         reserva.setNomeCliente(dto.getNomeCliente());
@@ -102,7 +106,6 @@ public class ReservaService {
         resposta.setDiaria(atualizada.getDiaria());
         resposta.setObservacao(atualizada.getObservacao());
         resposta.setCodusu(usuario.getCodusu());
-
 
         return resposta;
     }
