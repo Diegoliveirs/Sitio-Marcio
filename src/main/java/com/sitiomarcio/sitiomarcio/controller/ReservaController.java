@@ -18,7 +18,9 @@ public class ReservaController {
 
     @PostMapping("/cadastrar")
     public ReservaResponseDTO cadastrar(@RequestBody ReservaRequestDTO dto) {
-        return reservaService.cadastrarReserva(dto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return reservaService.cadastrarReserva(dto, username);
     }
 
     @GetMapping("/listar")
