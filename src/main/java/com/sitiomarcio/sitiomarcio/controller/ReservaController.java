@@ -20,6 +20,7 @@ public class ReservaController {
     public ReservaResponseDTO cadastrar(@RequestBody ReservaRequestDTO dto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        System.out.println("Usuário autenticado: " + username); 
         return reservaService.cadastrarReserva(dto, username);
     }
 
