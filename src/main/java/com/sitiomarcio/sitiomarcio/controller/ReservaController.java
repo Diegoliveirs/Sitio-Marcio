@@ -22,9 +22,10 @@ public class ReservaController {
     }
 
     @GetMapping("/listar")
-    public List<ReservaResponseDTO> listar(@RequestBody ReservaRequestDTO dto) {
+    public List<ReservaResponseDTO> listar() {
         return reservaService.listarReservas();
     }
+    
 
     @PutMapping("/atualizar/{id}")
     public ReservaResponseDTO atualizar(@PathVariable Long id, @RequestBody ReservaRequestDTO dto) {
